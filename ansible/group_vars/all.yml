@@ -899,6 +899,7 @@ enable_prometheus_openstack_exporter: "{{ enable_prometheus | bool }}"
 enable_prometheus_mtail: "{{ enable_prometheus | bool }}"
 enable_prometheus_elasticsearch_exporter: "{{ enable_prometheus | bool and enable_elasticsearch | bool }}"
 enable_prometheus_libvirt_exporter: "{{ enable_prometheus | bool and enable_nova | bool }}"
+enable_prometheus_ceph_mgr_exporter: "{{ enable_ceph | bool and enable_prometheus | bool }}"
 
 prometheus_alertmanager_user: "admin"
 prometheus_openstack_exporter_interval: "60s"
