@@ -697,3 +697,6 @@ storage
 
 [prometheus-alertmanager:children]
 monitoring
+
+[prometheus-openstack-exporter:children]
+monitoring
