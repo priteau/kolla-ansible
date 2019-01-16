@@ -135,6 +135,8 @@
     - prometheus-mysqld-exporter
     - prometheus-haproxy-exporter
     - prometheus-cadvisor
+    - prometheus-alertmanager
+    - prometheus-openstack-exporter
   serial: '{{ kolla_serial|default("0") }}'
   roles:
     - { role: prometheus,
