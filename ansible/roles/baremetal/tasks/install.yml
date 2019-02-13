@@ -6,8 +6,7 @@
   when: ansible_os_family == 'Debian'
 
 - name: Update yum cache
-  yum:
-    update_cache: yes
+  command: yum -y makecache fast
   become: True
   when: ansible_os_family == 'RedHat'
 
