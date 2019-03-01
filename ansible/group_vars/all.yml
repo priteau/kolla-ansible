@@ -283,6 +283,7 @@ prometheus_haproxy_exporter_port: "9101"
 prometheus_memcached_exporter_port: "9150"
 # Default cadvisor port of 8080 already in use
 prometheus_cadvisor_port: "18080"
+prometheus_mtail_port: "9197"
 
 # Prometheus alertmanager ports
 prometheus_alertmanager_port: "9093"
@@ -860,6 +861,8 @@ enable_prometheus_memcached_exporter: "{{ enable_memcached | bool }}"
 enable_prometheus_cadvisor: "{{ enable_prometheus | bool }}"
 enable_prometheus_alertmanager: "{{ enable_prometheus | bool }}"
 enable_prometheus_openstack_exporter: "{{ enable_prometheus | bool }}"
+enable_prometheus_mtail: "{{ enable_prometheus | bool }}"
 
 prometheus_alertmanager_user: "admin"
 prometheus_openstack_exporter_interval: "60s"
+prometheus_mtail_interval: "10s"
