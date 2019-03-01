@@ -137,6 +137,7 @@
     - prometheus-cadvisor
     - prometheus-alertmanager
     - prometheus-openstack-exporter
+    - prometheus-mtail
   serial: '{{ kolla_serial|default("0") }}'
   roles:
     - { role: prometheus,
