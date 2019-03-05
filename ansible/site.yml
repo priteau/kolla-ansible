@@ -138,6 +138,8 @@
     - prometheus-alertmanager
     - prometheus-openstack-exporter
     - prometheus-mtail
+    - prometheus-elasticsearch-exporter
+    - prometheus-libvirt-exporter
   serial: '{{ kolla_serial|default("0") }}'
   roles:
     - { role: prometheus,
