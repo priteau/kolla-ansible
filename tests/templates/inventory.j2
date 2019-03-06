@@ -656,3 +656,13 @@ control
 compute
 network
 storage
+
+[prometheus-openstack-exporter:children]
+monitoring
+
+[prometheus-mtail:children]
+monitoring
+control
+compute
+network
+storage
