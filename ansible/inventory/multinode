@@ -729,3 +729,6 @@ storage
 
 [prometheus-elasticsearch-exporter:children]
 elasticsearch
+
+[prometheus-libvirt-exporter:children]
+compute
