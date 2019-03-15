@@ -707,3 +707,7 @@ control
 compute
 network
 storage
+
+# Caso
+[caso:children]
+monitoring
