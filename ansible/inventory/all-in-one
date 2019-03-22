@@ -711,3 +711,9 @@ storage
 # Caso
 [caso:children]
 monitoring
+
+[prometheus-elasticsearch-exporter:children]
+elasticsearch
+
+[prometheus-libvirt-exporter:children]
+compute
