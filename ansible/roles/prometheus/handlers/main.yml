@@ -19,6 +19,7 @@
     - service.enabled | bool
     - config_json.changed | bool
       or prometheus_confs.changed | bool
+      or prometheus_alerting_rules.changed | bool
       or prometheus_container.changed | bool
 
 - name: Restart prometheus-node-exporter container
