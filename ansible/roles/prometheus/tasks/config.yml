@@ -43,6 +43,47 @@
   notify:
     - Restart prometheus-server container
 
+- name: Find prometheus alerting rules
+  vars:
+    service: "{{ prometheus_services['prometheus-server']}}"
+  local_action:
+    module: find
+    path: "{{ node_custom_config }}/prometheus/rules"
+    pattern: "*.rules"
+  run_once: True
+  register: prometheus_custom_alerting_rules
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+
+- name: Create config folder for prometheus alerting rules
+  vars:
+    service: "{{ prometheus_services['prometheus-server']}}"
+  file:
+    path: "{{ node_config_directory }}/prometheus-server/rules"
+    state: "directory"
+    owner: "{{ config_owner_user }}"
+    group: "{{ config_owner_group }}"
+    mode: "0770"
+  become: true
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+
+- name: Copying over prometheus alerting rules
+  vars:
+    service: "{{ prometheus_services['prometheus-server']}}"
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ node_config_directory }}/prometheus-server/rules/{{ item.path | basename }}"
+  register: prometheus_alerting_rules
+  when:
+    - inventory_hostname in groups[service.group]
+    - service.enabled | bool
+  with_items: "{{ prometheus_custom_alerting_rules.files }}"
+  notify:
+    - Restart prometheus-server container
+
 - name: Copying over prometheus alertmanager config file
   vars:
     service: "{{ prometheus_services['prometheus-alertmanager']}}"
