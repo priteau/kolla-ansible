@@ -708,6 +708,10 @@ compute
 network
 storage
 
+# Caso
+[caso:children]
+monitoring
+
 [prometheus-elasticsearch-exporter:children]
 elasticsearch
 
