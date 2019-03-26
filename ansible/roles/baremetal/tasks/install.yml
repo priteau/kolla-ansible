@@ -123,10 +123,6 @@
   become: True
   when: virtualenv is not none
 
-- name: force remove python-requests so we can install docker
-  command: sudo yum -y remove python-requests
-  when: ansible_os_family == 'RedHat'
-
 - name: Install docker SDK for python
   pip:
     name: docker
