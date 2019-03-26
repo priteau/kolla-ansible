@@ -61,6 +61,7 @@ scrape_configs:
 {% endfor %}
 {% endif %}
 
+<<<<<<< HEAD
 {% if enable_prometheus_openstack_exporter | bool %}
   - job_name: openstack_exporter
     scrape_interval: {{ prometheus_openstack_exporter_interval }}
@@ -104,10 +105,14 @@ scrape_configs:
 {% endif %}
 
 {% if enable_prometheus_ceph_mgr_exporter | bool or enable_prometheus_external_ceph_mgr_exporter | bool %}
+=======
+{% if enable_prometheus_ceph_mgr_exporter | bool %}
+>>>>>>> upstream/stable/rocky
   - job_name: ceph_mgr_exporter
     honor_labels: true
     static_configs:
       - targets:
+<<<<<<< HEAD
 {% if enable_prometheus_ceph_mgr_exporter | bool %}
 {% for host in groups["ceph-mgr"] %}
         - '{{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ hostvars[host]['prometheus_ceph_mgr_exporter_port'] }}'
@@ -117,6 +122,12 @@ scrape_configs:
 {% endfor %}
 {% endif %}
 {% endif %}
+=======
+{% for host in groups["ceph-mgr"] %}
+        - '{{ hostvars[host]['ansible_' + hostvars[host]['api_interface']]['ipv4']['address'] }}:{{ hostvars[host]['prometheus_ceph_mgr_exporter_port'] }}'
+{% endfor %}
+{% endif %}
+>>>>>>> upstream/stable/rocky
 
 {% if enable_prometheus_alertmanager | bool %}
 alerting:

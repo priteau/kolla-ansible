@@ -60,7 +60,8 @@
 - name: Install deltarpm packages
   package:
     name: "{{ item }}"
-    state: installed
+    state: present
+    update_cache: yes
   become: True
   with_items:
     - deltarpm
@@ -70,6 +71,7 @@
   package:
     name: "{{ item }}"
     state: present
+    update_cache: yes
   become: True
   with_items: "{{ redhat_pkg_install }}"
   when: ansible_os_family == 'RedHat'
