@@ -5,6 +5,11 @@
   become: True
   when: ansible_os_family == 'Debian'
 
+- name: Update yum cache
+  command: yum -y makecache fast
+  become: True
+  when: ansible_os_family == 'RedHat'
+
 # TODO(inc0): Gates don't seem to have ufw executable, check for it instead of ignore errors
 - name: Set firewall default policy
   become: True
