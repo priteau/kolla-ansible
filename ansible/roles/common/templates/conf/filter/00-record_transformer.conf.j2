@@ -36,6 +36,28 @@
     </record>
 </filter>
 
+{% if enable_monasca | bool %}
+# Kolla configures Fluentd to extract timestamps from OpenStack service
+# logs, however these timestamps are not saved in the event and are not
+# forwarded to Monasca. Here we save the timestamp which has been
+# *parsed* by Fluentd to a field which is part of the event and *is*
+# therefore forwarded to Monasca. If no timestamp is parsed, then this
+# should stamp the event with the current time. Note that since Kolla
+# configures Fluentd to keep the time key, the original, *unparsed*
+# timestamp, if present, will also be forwarded to Monasca as part of the
+# event. However, because the logs which are collected by Fluentd use a
+# variety of time formats the format of this timestamp is irregular and
+# is therefore dropped in the Monasca log pipeline in favour of the
+# timestamp added here. In the future we could investigate getting the
+# Fluentd Monasca plugin to add this timestamp.
+<filter *.**>
+  @type record_transformer
+  <record>
+    timestamp ${time}
+  </record>
+</filter>
+{% endif %}
+
 {% if enable_caso | bool and inventory_hostname in groups['caso'] %}
 <filter apel.events>
     @type parser

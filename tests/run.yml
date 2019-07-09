@@ -1,12 +1,11 @@
 ---
 - hosts: all
   vars:
-    kolla_ansible_src_dir: "src/{{ zuul.project.canonical_hostname }}/openstack/kolla-ansible"
-    kolla_ansible_full_src_dir: "{{ zuul.executor.work_root }}/{{ kolla_ansible_src_dir }}"
+    is_ceph: "{{ 'ceph' in scenario }}"
   tasks:
     - name: Prepare ceph disks
-      script: "{{ kolla_ansible_full_src_dir }}/tests/setup_ceph_disks.sh"
-      when: scenario == "ceph"
+      script: "setup_ceph_disks.sh"
+      when: is_ceph
       become: true
 
 - hosts: primary
@@ -17,6 +16,7 @@
     kolla_ansible_full_src_dir: "{{ zuul.executor.work_root }}/{{ kolla_ansible_src_dir }}"
     need_build_image: false
     is_previous_release: false
+    is_ceph: "{{ 'ceph' in scenario }}"
   tasks:
     - name: ensure /etc/kolla exists
       file:
@@ -125,7 +125,7 @@
       template:
         src: "{{ kolla_ansible_full_src_dir }}/tests/templates/ceph-overrides.j2"
         dest: /etc/kolla/config/ceph.conf
-      when: scenario == "ceph"
+      when: is_ceph
       delegate_to: "primary"
 
     - shell:
@@ -136,7 +136,7 @@
           export INSTALL_TYPE={{ install_type }}
           export NODEPOOL_TARBALLS_MIRROR=http://{{ zuul_site_mirror_fqdn }}:8080/tarballs
           export BUILD_IMAGE={{ need_build_image }}
-          export KOLLA_SRC_DIR={{ ansible_env.HOME }}/src/git.openstack.org/openstack/kolla
+          export KOLLA_SRC_DIR={{ ansible_env.HOME }}/src/opendev.org/openstack/kolla
           export ACTION={{ scenario }}
 
           tools/setup_gate.sh
@@ -144,3 +144,13 @@
         chdir: "{{ kolla_ansible_src_dir }}"
       delegate_to: "primary"
       environment: '{{ zuul | zuul_legacy_vars }}'
+
+- hosts: all
+  vars:
+    kolla_ansible_src_dir: "src/{{ zuul.project.canonical_hostname }}/openstack/kolla-ansible"
+  tasks:
+    - name: Run check-config.sh script
+      shell:
+        cmd: tests/check-config.sh
+        executable: /bin/bash
+        chdir: "{{ kolla_ansible_src_dir }}"

@@ -254,6 +254,9 @@ mistral_api_port: "8989"
 
 monasca_api_port: "8070"
 monasca_log_api_port: "5607"
+monasca_agent_forwarder_port: "17123"
+monasca_agent_statsd_port: "8125"
+monasca_grafana_server_port: "3001"
 
 mongodb_port: "27017"
 mongodb_web_port: "28017"
@@ -327,6 +330,15 @@ skydive_agents_port: "8090"
 
 solum_application_deployment_port: "9777"
 solum_image_builder_port: "9778"
+
+storm_nimbus_thrift_port: 6627
+storm_supervisor_thrift_port: 6628
+# Storm will run up to (end - start) + 1 workers per worker host. Here
+# we reserve ports for those workers, and implicitly define the maximum
+# number of workers per host.
+storm_worker_port_range:
+  start: 6700
+  end: 6703
 
 swift_proxy_server_port: "8080"
 swift_object_server_port: "6000"
@@ -528,6 +540,7 @@ enable_searchlight: "no"
 enable_senlin: "no"
 enable_skydive: "no"
 enable_solum: "no"
+enable_storm: "{{ enable_monasca | bool }}"
 enable_swift: "no"
 enable_tacker: "no"
 enable_telegraf: "no"
@@ -560,12 +573,25 @@ enable_prometheus: "no"
 enable_destroy_images: "no"
 
 ####################
+# Monasca options
+####################
+
+# The OpenStack username used by the Monasca Agent and the Fluentd Monasca
+# plugin to post logs and metrics from the control plane to Monasca.
+monasca_agent_user: "monasca-agent"
+
+# The OpenStack project to which the control plane logs and metrics are
+# tagged with. Only users with the monasca read only user role, or higher
+# can access these from the Monasca APIs.
+monasca_control_plane_project: "monasca_control_plane"
+
+####################
 # Logging options
 ####################
 
 elasticsearch_address: "{{ kolla_internal_fqdn }}"
 enable_elasticsearch: "{{ 'yes' if enable_central_logging | bool or enable_freezer | bool or enable_osprofiler | bool or enable_skydive | bool or enable_monasca | bool else 'no' }}"
-enable_kibana: "{{ 'yes' if enable_central_logging | bool else 'no' }}"
+enable_kibana: "{{ 'yes' if enable_central_logging | bool or enable_monasca | bool else 'no' }}"
 
 ####################
 # Redis options
@@ -629,7 +655,15 @@ default_user_domain_id: "default"
 
 # Valid options are [ fernet ]
 keystone_token_provider: "fernet"
+# Keystone fernet token expiry in seconds. Default is 1 day.
 fernet_token_expiry: 86400
+# Keystone window to allow expired fernet tokens. Default is 2 days.
+fernet_token_allow_expired_window: 172800
+# Keystone fernet key rotation interval in seconds. Default is sum of token
+# expiry and allow expired window, 3 days. This ensures the minimum number
+# of keys are active. If this interval is lower than the sum of the token
+# expiry and allow expired window, multiple active keys will be necessary.
+fernet_key_rotation_interval: "{{ fernet_token_expiry + fernet_token_allow_expired_window }}"
 
 keystone_default_user_role: "_member_"
 
@@ -679,6 +713,7 @@ gnocchi_backend_storage: "{{ 'ceph' if enable_ceph|bool else 'file' }}"
 
 # Valid options are [redis, '']
 gnocchi_incoming_storage: "{{ 'redis' if enable_redis | bool else '' }}"
+gnocchi_metric_datadir_volume: "gnocchi"
 
 
 #################################

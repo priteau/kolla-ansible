@@ -13,8 +13,10 @@ Projects Deployment References
    designate-guide
    hyperv-guide
    ironic-guide
+   keystone-guide
    manila-guide
    manila-hnas-guide
+   monasca-guide
    nova-fake-driver
    swift-guide
    bifrost

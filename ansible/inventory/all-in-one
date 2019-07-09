@@ -100,7 +100,17 @@ control
 [qdrouterd:children]
 control
 
+[monasca-agent:children]
+compute
+control
+monitoring
+network
+storage
+
 [monasca:children]
+monitoring
+
+[storm:children]
 monitoring
 
 [mongodb:children]
@@ -443,7 +453,19 @@ murano
 murano
 
 # Monasca
+[monasca-agent-collector:children]
+monasca-agent
+
+[monasca-agent-forwarder:children]
+monasca-agent
+
+[monasca-agent-statsd:children]
+monasca-agent
+
 [monasca-api:children]
+monasca
+
+[monasca-grafana:children]
 monasca
 
 [monasca-log-api:children]
@@ -454,6 +476,25 @@ monasca
 
 [monasca-log-persister:children]
 monasca
+
+[monasca-log-metrics:children]
+monasca
+
+[monasca-thresh:children]
+monasca
+
+[monasca-notification:children]
+monasca
+
+[monasca-persister:children]
+monasca
+
+# Storm
+[storm-worker:children]
+storm
+
+[storm-nimbus:children]
+storm
 
 # Ironic
 [ironic-api:children]
@@ -708,10 +749,6 @@ compute
 network
 storage
 
-# Caso
-[caso:children]
-monitoring
-
 [prometheus-elasticsearch-exporter:children]
 elasticsearch
 
@@ -720,3 +757,7 @@ compute
 
 [prometheus-jiralert:children]
 prometheus-alertmanager
+
+# Caso
+[caso:children]
+monitoring
