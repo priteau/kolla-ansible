@@ -9,6 +9,7 @@ caso_services:
       - "{{ node_config_directory }}/caso/:{{ container_config_directory }}/"
       - "/etc/localtime:/etc/localtime:ro"
       - "caso_spool:/var/lib/caso"
+      - "caso_ssm_outgoing:/var/spool/apel/outgoing/openstack"
       - "kolla_logs:/var/log/kolla/"
     dimensions: "{{ caso_dimensions }}"
 
@@ -20,6 +21,8 @@ caso_projects: []
 caso_logging_debug: "{{ openstack_logging_debug }}"
 caso_log_dir: "/var/log/kolla/caso"
 caso_cron_table: "10 * * * *"
+caso_messengers:
+  - caso.messenger.logstash.LogstashMessenger
 
 ####################
 # OpenStack
